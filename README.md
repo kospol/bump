@@ -7,7 +7,7 @@ bump clears the Splunk Web cache and forces all the static files (.js, .css etc)
 Version 0.1
 
 #Install
-bump only requires the Requests and beautifulsoup4 libraries. You can install them manually or with
+bump only requires the Requests library. You can install it manually or by executing the following command:
 
     pip install -r requirements.txt
 

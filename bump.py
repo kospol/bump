@@ -3,7 +3,7 @@
 import requests;
 import optparse
 import sys
-from bs4 import BeautifulSoup as BS
+import re
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 # Get the options parser
@@ -61,10 +61,18 @@ r = s.get(bumpurl, verify=False)
 if "Forbidden" in r.text:
     print "Wrong username or password!"
     sys.exit(0)
-soup = BS(r.text, "html.parser")
-formkey = soup.find('input', {"name": "splunk_form_key"})['value']
+
+for line in r.text.splitlines():
+    if 'splunk_form_key' in line:
+        formkey = re.search(r'\d+', line).group()
+        break
 
 bump_data = {"splunk_form_key": formkey}
 r = s.post(bumpurl, bump_data, verify=False)
 
-print "bump!"
+for line in r.text.splitlines():
+    if 'Current version' in line:
+        curVersion = re.search(r'\d+', line).group()
+        break
+
+print "bump! " + curVersion
